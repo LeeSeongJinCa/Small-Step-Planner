@@ -1,19 +1,23 @@
 import { BiAddToQueue } from "react-icons/bi";
-import { useSetRecoilState } from "recoil";
 import styled from "@emotion/styled";
 
-import { SmallStepper, SmallStepType } from "../../utils/constants/smallSteps";
 import useToggle from "../../utils/hooks/useToggle";
 import useInput from "../../utils/hooks/useInput";
-import { smallStepState } from "../../utils/libs/atoms";
+import useSmallSteps from "../../utils/hooks/useSmallSteps";
 
 const AddSmallStep = () => {
   const [modal, onToggleModal] = useToggle();
   const [keyword, onChangeKeyword, , setKeyword] = useInput();
   const [smallStep, onChangeSmallStep, , setSmallStep] = useInput();
-  const setSmallSteps = useSetRecoilState(smallStepState);
+  const { addSmallStep, steps } = useSmallSteps();
 
   const onClickComplete = () => {
+    const isExist = steps.some(
+      (step) => step.keyword === keyword && step.smallStep === smallStep
+    );
+    if (isExist) {
+      return alert("동일한 스몰스탭이 존재합니다.");
+    }
     if (keyword.trim() === "" || smallStep.trim() === "") {
       return alert("키워드와 스몰 스텝을 입력해주세요.");
     }
@@ -21,15 +25,7 @@ const AddSmallStep = () => {
       return alert("키워드는 # 으로 시작해야 합니다.");
     }
 
-    const newSmallStep: SmallStepType = {
-      keyword,
-      smallStep,
-      checkedList: [],
-    };
-
-    SmallStepper.addSmallStep(newSmallStep);
-    setSmallSteps((prev) => [...prev, newSmallStep]);
-
+    addSmallStep(keyword, smallStep);
     setKeyword("");
     setSmallStep("");
   };
@@ -42,19 +38,20 @@ const AddSmallStep = () => {
       </AddButton>
       {modal && (
         <AddInputWrap>
-          <input
+          <Input
             type="text"
             placeholder="keyword"
             value={keyword}
             onChange={onChangeKeyword}
           />
-          <input
+          <Input
             type="text"
             placeholder="small step"
             value={smallStep}
             onChange={onChangeSmallStep}
+            onKeyPress={(e) => e.key === "Enter" && onClickComplete()}
           />
-          <button onClick={onClickComplete}>완료</button>
+          <Button onClick={onClickComplete}>완료</Button>
         </AddInputWrap>
       )}
     </>
@@ -112,19 +109,45 @@ const AddInputWrap = styled.div`
       transform: scale(1);
     }
   }
-  > input {
-    margin: 2px 0;
-    padding: 4px;
-    border: 1px solid #b9b9b9;
-    border-radius: 0;
+  > *:not(:last-child) {
+    margin-bottom: 8px;
   }
-  > button {
-    margin-top: 2px;
-    padding: 4px;
-    border: 1px solid #b9b9b9;
-    background-color: white;
-    color: #2b2b2b;
-    cursor: pointer;
+`;
+
+const Input = styled.input`
+  padding: 8px;
+  border: 1px solid #bdbdbd;
+  outline: none;
+  &:not(:placeholder-shown) {
+    border-color: #797979;
+  }
+  &:focus,
+  &:focus-within {
+    border-color: #79a4ff;
+  }
+  &:hover {
+    border-color: #242424;
+  }
+`;
+
+const Button = styled.button`
+  padding: 8px;
+  border: 0;
+  border-radius: 4px;
+  outline: none;
+  background-color: #3e96ff;
+  color: white;
+  box-shadow: 0 2px 5px #d2d2d2;
+  transition: 300ms;
+  cursor: pointer;
+  &:hover {
+    transform: scale(1.05);
+  }
+  &:active {
+    transform: scale(0.95);
+  }
+  &:focus {
+    background-color: #0275ff;
   }
 `;
 

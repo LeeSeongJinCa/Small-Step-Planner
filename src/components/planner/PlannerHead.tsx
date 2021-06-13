@@ -1,16 +1,14 @@
 import styled from "@emotion/styled";
 
-export const PlannerHead = () => {
-  const date = new Date();
-  const y = date.getFullYear();
-  const m = date.getMonth() + 1;
+type Props = {
+  date: string;
+};
 
+export const PlannerHead = ({ date }: Props) => {
   return (
     <Wrap>
       <h1>Small Step Monthly Planner</h1>
-      <h2>
-        {y}-{`${m}`.padStart(2, "0")}
-      </h2>
+      <h2>{date}</h2>
     </Wrap>
   );
 };
