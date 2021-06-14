@@ -1,20 +1,21 @@
-import { BiAddToQueue } from "react-icons/bi";
+import { useRef } from "react";
 import styled from "@emotion/styled";
 
-import useToggle from "../../utils/hooks/useToggle";
-import useInput from "../../utils/hooks/useInput";
-import useSmallSteps from "../../utils/hooks/useSmallSteps";
+import { BiAddToQueue } from "../assets";
+import { useToggle, useInput, useSmallSteps } from "../../utils/hooks";
 
 const AddSmallStep = () => {
-  const [modal, onToggleModal] = useToggle();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [toggle, onToggle] = useToggle(false);
   const [keyword, onChangeKeyword, , setKeyword] = useInput();
   const [smallStep, onChangeSmallStep, , setSmallStep] = useInput();
-  const { addSmallStep, steps } = useSmallSteps();
+  const { steps, addSmallStep } = useSmallSteps();
 
   const onClickComplete = () => {
     const isExist = steps.some(
       (step) => step.keyword === keyword && step.smallStep === smallStep
     );
+
     if (isExist) {
       return alert("동일한 스몰스탭이 존재합니다.");
     }
@@ -28,93 +29,56 @@ const AddSmallStep = () => {
     addSmallStep(keyword, smallStep);
     setKeyword("");
     setSmallStep("");
+    onToggle();
   };
 
   return (
-    <>
-      <AddButton onClick={onToggleModal}>
+    <AddSmallStepWrap>
+      <SlideWrap toggle={toggle}>
+        <Input
+          type="text"
+          ref={inputRef}
+          placeholder="keyword"
+          value={keyword}
+          onChange={onChangeKeyword}
+        />
+        <Input
+          type="text"
+          placeholder="small step"
+          value={smallStep}
+          onChange={onChangeSmallStep}
+          onKeyPress={(e) => e.key === "Enter" && onClickComplete()}
+        />
+      </SlideWrap>
+      <Button
+        className="flex-center"
+        onClick={toggle ? onClickComplete : onToggle}
+      >
         <BiAddToQueue title="add small step" />
-        <span>추가</span>
-      </AddButton>
-      {modal && (
-        <AddInputWrap>
-          <Input
-            type="text"
-            placeholder="keyword"
-            value={keyword}
-            onChange={onChangeKeyword}
-          />
-          <Input
-            type="text"
-            placeholder="small step"
-            value={smallStep}
-            onChange={onChangeSmallStep}
-            onKeyPress={(e) => e.key === "Enter" && onClickComplete()}
-          />
-          <Button onClick={onClickComplete}>완료</Button>
-        </AddInputWrap>
-      )}
-    </>
+        <span>{toggle ? "완료" : "추가"}</span>
+      </Button>
+    </AddSmallStepWrap>
   );
 };
 
-const AddButton = styled.div`
-  position: fixed;
-  left: 24px;
-  top: 24px;
+const AddSmallStepWrap = styled.li`
   display: flex;
   align-items: center;
-  flex-direction: column;
-  justify-content: center;
-  width: 62px;
-  height: 62px;
-  padding: 2px;
-  border: 0;
-  border-radius: 50%;
-  background-color: #353535;
-  color: white;
-  box-shadow: 0 0 5px #e6e6e6;
-  transition: box-shadow 0.3s;
-  user-select: none;
-  cursor: pointer;
-  &:hover {
-    box-shadow: 0 0 5px #888888;
-  }
-  > svg {
-    width: 24px;
-    height: 24px;
-  }
-  > span {
-    font-size: 14px;
-    margin-top: 4px;
-  }
+  margin-top: 12px;
 `;
 
-const AddInputWrap = styled.div`
-  position: fixed;
-  top: 100px;
-  left: 24px;
+const SlideWrap = styled.div<{ toggle: boolean }>`
+  position: relative;
+  top: 0;
+  left: 0;
   display: flex;
-  flex-direction: column;
-  width: 140px;
-  z-index: 1;
-  animation: fadeAppear 0.5s cubic-bezier(0.45, 0.55, 0.55, 1.45);
-  @keyframes fadeAppear {
-    from {
-      opacity: 0;
-      transform: scale(0);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-  > *:not(:last-child) {
-    margin-bottom: 8px;
-  }
+  width: ${({ toggle }) => (toggle ? "300px" : "0")};
+  transform: scale(${({ toggle }) => (toggle ? "1" : "0")});
+  transition: all 500ms;
 `;
 
 const Input = styled.input`
+  width: 150px;
   padding: 8px;
   border: 1px solid #bdbdbd;
   outline: none;
@@ -131,6 +95,8 @@ const Input = styled.input`
 `;
 
 const Button = styled.button`
+  position: relative;
+  height: 100%;
   padding: 8px;
   border: 0;
   border-radius: 4px;

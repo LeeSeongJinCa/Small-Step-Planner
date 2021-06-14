@@ -1,8 +1,8 @@
-import { ChangeEvent, useCallback, useState } from "react";
+import { ChangeEvent, useCallback } from "react";
 
 import * as TableRow from "./TableRow";
 
-import useSmallSteps from "../../utils/hooks/useSmallSteps";
+import { useSmallSteps } from "../../utils/hooks";
 import { PlannerDragType } from "../../utils/libs/types";
 import {
   getLastDate,
@@ -14,7 +14,6 @@ type Props = SmallStepType & {};
 
 const SmallSteps = ({ keyword, smallStep, checkedList }: Props) => {
   const { removeSmallStep, toggleCheckbox } = useSmallSteps();
-  const [enterId, setEnterId] = useState<string>("");
 
   const id = `${keyword}-${smallStep}`;
   const className = `step`;
@@ -28,14 +27,6 @@ const SmallSteps = ({ keyword, smallStep, checkedList }: Props) => {
     e.dataTransfer.setData("text/plain", e.currentTarget.id);
   }, []);
 
-  const onDragEnter = useCallback(() => {
-    setEnterId(id);
-  }, []);
-
-  const onDragEnd = useCallback((e: PlannerDragType) => {
-    setEnterId("");
-  }, []);
-
   return (
     <TableRow.TableRow
       key={id}
@@ -44,8 +35,6 @@ const SmallSteps = ({ keyword, smallStep, checkedList }: Props) => {
         id,
         className,
         onDragStart,
-        onDragEnter,
-        onDragEnd,
       }}
     >
       <div onClick={onClickDelete}>

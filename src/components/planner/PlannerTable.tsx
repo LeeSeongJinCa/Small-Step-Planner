@@ -8,7 +8,7 @@ import {
   getLastDate,
   getLocalDateKey,
 } from "../../utils/functions/getLocalDate";
-import useSmallSteps from "../../utils/hooks/useSmallSteps";
+import { useSmallSteps } from "../../utils/hooks";
 import { PlannerDragType } from "../../utils/libs/types";
 
 export const PlannerTable = () => {

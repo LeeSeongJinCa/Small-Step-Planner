@@ -1,6 +1,7 @@
 import { FC, HTMLAttributes } from "react";
-import { AiFillDelete } from "react-icons/ai";
 import styled from "@emotion/styled";
+
+import { AiFillDelete } from "../assets";
 
 type DateCheckboxProps = {
   localDate: string;
