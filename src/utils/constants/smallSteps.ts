@@ -1,4 +1,4 @@
-export type AllSmallStepType = {
+export type SmallStepDatesType = {
   date: string;
   smallSteps: SmallStepType[];
 };
@@ -162,7 +162,7 @@ const monthOfSixSmallSteps: SmallStepType[] = [
   },
 ];
 
-export const allSmallSteps: AllSmallStepType[] = [
+export const smallStepDates: SmallStepDatesType[] = [
   {
     date: "2021-05",
     smallSteps: [],

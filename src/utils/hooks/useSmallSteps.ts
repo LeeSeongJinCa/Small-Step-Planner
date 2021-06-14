@@ -3,9 +3,9 @@ import { useParams } from "react-router";
 import { useRecoilState } from "recoil";
 import produce from "immer";
 
-import { SmallStepType } from "../constants/smallSteps";
-import { allSmallStepsState, smallStepState } from "../libs/atoms";
-import { smallStepHelper, allSmallStepHelper } from "../libs/helper";
+import { SmallStepDatesType, SmallStepType } from "../constants/smallSteps";
+import { smallStepDatesState, smallStepState } from "../libs/atoms";
+import { smallStepHelper, smallStepDatesHelper } from "../libs/helper";
 
 type ToggleArgs = {
   keyword: string;
@@ -16,7 +16,7 @@ type ToggleArgs = {
 
 const useSmallSteps = () => {
   const { date } = useParams<{ date: string }>();
-  const [all, setAll] = useRecoilState(allSmallStepsState);
+  const [dates, setDates] = useRecoilState(smallStepDatesState);
   const [steps, setSteps] = useRecoilState(smallStepState);
 
   const setSmallSteps = useCallback((steps: SmallStepType[]) => {
@@ -35,20 +35,22 @@ const useSmallSteps = () => {
     smallStepHelper.addSmallStep(newSmallStep);
   }, []);
 
-  const removeSmallStep = useCallback((keyword: string, smallStep: string) => {
-    const removedSteps = steps.filter(
-      (step) => step.keyword !== keyword && step.smallStep !== smallStep
-    );
+  const removeSmallStep = useCallback(
+    (keyword: string, smallStep: string) => {
+      const removedSteps = steps.filter(
+        (step) => step.keyword !== keyword && step.smallStep !== smallStep
+      );
 
-    setSteps(removedSteps);
-    smallStepHelper.setSmallSteps = removedSteps;
-  }, []);
+      setSteps(removedSteps);
+      smallStepHelper.setSmallSteps = removedSteps;
+    },
+    [steps]
+  );
 
   const toggleCheckbox = useCallback(
     (args: ToggleArgs) => {
       const { keyword, smallStep, checked, localDate } = args;
-      const newSmallStep = [...steps];
-      const newSteps = produce(newSmallStep, (state) => {
+      const newSteps = produce(steps, (state) => {
         const smallStepIdx = state.findIndex(
           (step) => step.keyword === keyword && step.smallStep === smallStep
         );
@@ -74,36 +76,71 @@ const useSmallSteps = () => {
     [steps]
   );
 
-  const saveAllInStorage = () => {
+  const addSmallStepDate = useCallback(
+    (newDate: SmallStepDatesType) => {
+      const addedDates = produce(dates, (draft) => {
+        draft.push(newDate);
+      });
+
+      setDates(addedDates);
+      smallStepDatesHelper.setSmallStepDates = addedDates;
+    },
+    [dates]
+  );
+
+  const removeSmallStepDate = useCallback(
+    (removeDates: string[]) => {
+      const removedDates = produce(dates, (draft) => {
+        removeDates.forEach((date) => {
+          const idx = draft.findIndex(({ date: _date }) => _date === date);
+
+          if (idx === -1) throw Error("Cannot found a date");
+
+          draft.splice(idx, 1);
+        });
+      });
+
+      setDates(removedDates);
+      smallStepDatesHelper.setSmallStepDates = removedDates;
+    },
+    [dates]
+  );
+
+  const saveDatesInStorage = useCallback(() => {
     if (!date) return;
 
-    const newAlls = produce(all, (state) => {
+    const newDates = produce(dates, (state) => {
       const idx = state.findIndex(({ date: _date }) => _date === date);
 
-      if (idx === -1) throw Error(`Cannot found a date`);
+      if (idx === -1) {
+        return;
+        throw Error(`Cannot found a date`);
+      }
 
       state[idx].smallSteps = steps;
     });
 
-    setAll(newAlls);
-    allSmallStepHelper.setAllSmallStep = newAlls;
-  };
+    setDates(newDates);
+    smallStepDatesHelper.setSmallStepDates = newDates;
+  }, [date, steps]);
 
   useEffect(() => {
     setSteps(smallStepHelper.getSmallSteps);
   }, []);
 
   useEffect(() => {
-    saveAllInStorage();
+    saveDatesInStorage();
   }, [steps]);
 
   return {
-    all,
+    dates,
     steps,
     setSmallSteps,
     addSmallStep,
     removeSmallStep,
     toggleCheckbox,
+    addSmallStepDate,
+    removeSmallStepDate,
   } as const;
 };
 

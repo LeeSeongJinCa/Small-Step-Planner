@@ -1,6 +1,8 @@
+import produce from "immer";
+
 import {
-  allSmallSteps,
-  AllSmallStepType,
+  smallStepDates,
+  SmallStepDatesType,
   SmallStepType,
 } from "../constants/smallSteps";
 
@@ -45,32 +47,32 @@ class SmallStepHelper {
   }
 }
 
-class AllSmallStepHelper {
+class SmallStepDateHelper {
   constructor() {
-    const local = this.getLocalAllSmallStep();
+    const local = this.getLocalSmallStepDate();
 
     if (local === null || local.length === 0) {
-      localStorage.setItem("allSmallStep", JSON.stringify(allSmallSteps));
+      localStorage.setItem("smallStepDates", JSON.stringify(smallStepDates));
     }
   }
 
-  get getAllSmallStep(): AllSmallStepType[] {
-    return JSON.parse(localStorage.getItem("allSmallStep") as string);
+  get getSmallStepDates(): SmallStepDatesType[] {
+    return JSON.parse(localStorage.getItem("smallStepDates") as string);
   }
 
-  set setAllSmallStep(smallSteps: AllSmallStepType[]) {
-    localStorage.setItem("allSmallStep", JSON.stringify(smallSteps));
+  set setSmallStepDates(newDates: SmallStepDatesType[]) {
+    const sortedNewDates = produce(newDates, (draft) => {
+      draft.sort((a, b) => (a.date > b.date ? 1 : -1));
+    });
+
+    localStorage.setItem("smallStepDates", JSON.stringify(sortedNewDates));
   }
 
-  getLocalAllSmallStep(): AllSmallStepType[] {
-    return JSON.parse(localStorage.getItem("allSmallStep") as string);
+  getLocalSmallStepDate(): SmallStepDatesType[] {
+    return JSON.parse(localStorage.getItem("smallStepDates") as string);
   }
-
-  // addAllSmallStep(newSmallStep: SmallStepType) {}
-
-  // deleteAllSmallStep(keyword: string, smallStep: string) {}
 }
 
 export const smallStepHelper = new SmallStepHelper();
 
-export const allSmallStepHelper = new AllSmallStepHelper();
+export const smallStepDatesHelper = new SmallStepDateHelper();
