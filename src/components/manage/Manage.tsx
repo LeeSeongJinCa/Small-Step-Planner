@@ -1,126 +1,99 @@
-import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
-import { CgCalendarDates } from "react-icons/cg";
-import { AiFillCheckSquare } from "react-icons/ai";
+import { useState } from "react";
 import styled from "@emotion/styled";
 
-import useSmallSteps from "../../utils/hooks/useSmallSteps";
+import AddDate from "./AddDate";
+import Dates from "./Dates";
+
+import { AiFillDelete, AiFillCheckSquare, CgCalendarDates } from "../assets";
+import { useSmallSteps } from "../../utils/hooks";
 
 export const Manage = () => {
-  const { all, setSmallSteps } = useSmallSteps();
-  const [count, setCount] = useState<number>(-1);
-  const r = useRef<HTMLAnchorElement>(null);
+  const { dates, removeSmallStepDate } = useSmallSteps();
+  const [removeDates, setRemoveDates] = useState<string[]>([]);
 
-  const onKeyDown = (e: KeyboardEvent) => {
-    const key = e.key;
+  const toggleToRemoveDates = (date: string) => {
+    const aIdx = removeDates.findIndex((_date) => _date === date);
+    const copy = [...removeDates];
 
-    if (key === "Enter" && count !== -1) {
-      r.current?.click();
-    }
-
-    if (count === -1 && (key === "ArrowUp" || key === "ArrowDown")) {
-      setCount((prev) => prev + 1);
-      return;
-    }
-
-    if (key === "ArrowUp") {
-      if (count === 0) return;
-      setCount((prev) => prev - 1);
-    } else if (key === "ArrowDown") {
-      if (count === all.length - 1) return;
-      setCount((prev) => prev + 1);
-    }
+    aIdx === -1 ? copy.push(date) : copy.splice(aIdx, 1);
+    setRemoveDates(copy);
   };
 
-  useEffect(() => {
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [count]);
+  const onClickDeleteByBatch = () => {
+    if (!window.confirm(`${removeDates.length}개를 삭제하시겠습니까?`)) return;
+
+    removeSmallStepDate(removeDates);
+    setRemoveDates([]);
+  };
 
   return (
     <ManageWrap>
       <ul>
-        <li>
-          <span>
+        <li className="flex-center">
+          {removeDates.length > 0 && (
+            <AiFillDelete onClick={onClickDeleteByBatch} />
+          )}
+          <span className="flex-center">
             <CgCalendarDates /> 날짜
           </span>
-          <span>
+          <span className="flex-center">
             <AiFillCheckSquare /> 개수
           </span>
         </li>
-        {all.map(({ date, smallSteps }, i) => {
-          const onClick = () => {
-            setSmallSteps(smallSteps);
-          };
-
-          return (
-            <li
-              key={date}
-              className={count === i ? "focused" : ""}
-              onClick={onClick}
-            >
-              <Link to={`/${date}`} ref={count === i ? r : null}>
-                <span>{date}</span>
-                <span>{smallSteps.length}</span>
-              </Link>
-            </li>
-          );
-        })}
+        <Dates
+          dates={dates}
+          removeDates={removeDates}
+          toggleToRemoveDates={toggleToRemoveDates}
+        />
       </ul>
+      <AddDate dates={dates} />
     </ManageWrap>
   );
 };
 
-const ManageWrap = styled.div`
+const ManageWrap = styled.main`
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   > ul {
+    height: 600px;
     border: 1px solid #d2d2d2;
-    > li {
-      display: flex;
-      transition: all 300ms;
-      &:first-of-type {
-        padding: 12px;
-        border-bottom: 1px solid #d2d2d2;
-        font-weight: bold;
-        > span {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          > svg {
-            margin-right: 4px;
-          }
-        }
-      }
-      &:nth-of-type(2n - 2) {
-        background-color: #f2f5f5cc;
-      }
-      &.focused {
-        position: relative;
-        box-shadow: inset 1px 0 0 #dadce0, inset -1px 0 0 #dadce0,
-          0 1px 2px 0 rgb(60 64 67 / 30%), 0 1px 3px 1px rgb(60 64 67 / 15%);
-        &::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          display: block;
-          height: 100%;
-          width: 3px;
-          background-color: #4d90f0;
-        }
-      }
-      a {
-        display: inline-block;
-        color: black;
-        padding: 12px;
-      }
+    border-radius: 4px;
+    overflow-y: auto;
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: white;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #d2d2d2;
+    }
+    > li:first-of-type {
+      position: sticky;
+      top: 0;
+      left: 0;
+      padding: 12px;
+      border-bottom: 1px solid #d2d2d2;
+      background-color: white;
+      z-index: 1;
+      font-weight: bold;
       span {
-        display: inline-block;
         width: 200px;
         text-align: center;
+        > svg {
+          margin-right: 4px;
+        }
+      }
+      > svg {
+        position: absolute;
+        top: 50%;
+        left: 4px;
+        transform: translate(0, -50%);
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
       }
     }
   }
