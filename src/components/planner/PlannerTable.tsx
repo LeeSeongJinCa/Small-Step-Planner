@@ -1,4 +1,5 @@
 import { useCallback } from "react";
+import { useParams } from "react-router-dom";
 
 import * as TableRow from "./TableRow";
 import AddSmallStep from "./AddSmallStep";
@@ -11,7 +12,10 @@ import {
 import { useSmallSteps } from "../../utils/hooks";
 import { PlannerDragType } from "../../utils/libs/types";
 
-export const PlannerTable = () => {
+type Props = { isIncludeWeekend: boolean };
+
+export const PlannerTable = ({ isIncludeWeekend }: Props) => {
+  const { date } = useParams<{ date: string }>();
   const { steps, setSmallSteps } = useSmallSteps();
 
   const onDrop = useCallback(
@@ -38,7 +42,6 @@ export const PlannerTable = () => {
 
       if (selectedIdx === -1) throw Error(`Cannot found a selected small step`);
       if (droppedIdx === -1) throw Error(`Cannot found a dropped small step`);
-
       if (selectedIdx === droppedIdx) return;
 
       const getNewSmallSteps = () => {
@@ -65,14 +68,24 @@ export const PlannerTable = () => {
       <TableRow.TableItem className="head">
         <TableRow.Keyword>Keyword</TableRow.Keyword>
         <TableRow.SmallStep>Small Step</TableRow.SmallStep>
-        {Array.from(Array(getLastDate()).keys()).map((i) => (
-          <span key={getLocalDateKey(i)} className="item date">
-            {i + 1}
-          </span>
-        ))}
+        {Array.from(Array(getLastDate()).keys()).map((i) => {
+          const isWeekend = new Date(`${date}-${i + 1}`).getDay() % 6 == 0;
+
+          if (isIncludeWeekend && isWeekend) return null;
+
+          return (
+            <span key={getLocalDateKey(i)} className="item date">
+              {i + 1}
+            </span>
+          );
+        })}
       </TableRow.TableItem>
       {steps.map((step) => (
-        <SmallSteps key={`${step.keyword}-${step.smallStep}`} {...step} />
+        <SmallSteps
+          key={`${step.keyword}-${step.smallStep}`}
+          {...step}
+          isIncludeWeekend={isIncludeWeekend}
+        />
       ))}
       <AddSmallStep />
     </ul>

@@ -1,4 +1,5 @@
 import { ChangeEvent, useCallback } from "react";
+import { useParams } from "react-router-dom";
 
 import * as TableRow from "./TableRow";
 
@@ -10,9 +11,15 @@ import {
 } from "../../utils/functions/getLocalDate";
 import { SmallStepType } from "../../utils/constants/smallSteps";
 
-type Props = SmallStepType & {};
+type Props = SmallStepType & { isIncludeWeekend: boolean };
 
-const SmallSteps = ({ keyword, smallStep, checkedList }: Props) => {
+const SmallSteps = ({
+  keyword,
+  smallStep,
+  checkedList,
+  isIncludeWeekend,
+}: Props) => {
+  const { date } = useParams<{ date: string }>();
   const { removeSmallStep, toggleCheckbox } = useSmallSteps();
 
   const id = `${keyword}-${smallStep}`;
@@ -24,7 +31,12 @@ const SmallSteps = ({ keyword, smallStep, checkedList }: Props) => {
   }, []);
 
   const onDragStart = useCallback((e: PlannerDragType) => {
+    e.currentTarget.setAttribute("data-grab", "grab");
     e.dataTransfer.setData("text/plain", e.currentTarget.id);
+  }, []);
+
+  const onDragEnd = useCallback((e: PlannerDragType) => {
+    e.currentTarget.setAttribute("data-grab", "");
   }, []);
 
   return (
@@ -35,6 +47,7 @@ const SmallSteps = ({ keyword, smallStep, checkedList }: Props) => {
         id,
         className,
         onDragStart,
+        onDragEnd,
       }}
     >
       <div onClick={onClickDelete}>
@@ -43,6 +56,10 @@ const SmallSteps = ({ keyword, smallStep, checkedList }: Props) => {
       <TableRow.Keyword>{keyword}</TableRow.Keyword>
       <TableRow.SmallStep>{smallStep}</TableRow.SmallStep>
       {Array.from(Array(getLastDate()).keys()).map((i) => {
+        const isWeekend = new Date(`${date}-${i + 1}`).getDay() % 6 == 0;
+
+        if (isIncludeWeekend && isWeekend) return null;
+
         const localDate = getLocalDateKey(i);
 
         const onChange = (e: ChangeEvent<HTMLInputElement>) => {
