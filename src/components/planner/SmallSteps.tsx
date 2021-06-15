@@ -20,7 +20,7 @@ const SmallSteps = ({
   isIncludeWeekend,
 }: Props) => {
   const { date } = useParams<{ date: string }>();
-  const { removeSmallStep, toggleCheckbox } = useSmallSteps();
+  const { steps, removeSmallStep, toggleCheckbox } = useSmallSteps();
 
   const id = `${keyword}-${smallStep}`;
   const className = `step`;
@@ -28,7 +28,7 @@ const SmallSteps = ({
   const onClickDelete = useCallback(() => {
     if (!window.confirm("정말 삭제하시겠습니까?")) return;
     removeSmallStep(keyword, smallStep);
-  }, []);
+  }, [steps]);
 
   const onDragStart = useCallback((e: PlannerDragType) => {
     e.currentTarget.setAttribute("data-grab", "grab");

@@ -24,7 +24,7 @@ const useSmallSteps = () => {
     smallStepHelper.setSmallSteps = steps;
   }, []);
 
-  const addSmallStep = useCallback((keyword: string, smallStep: string) => {
+  const addSmallStep = (keyword: string, smallStep: string) => {
     const newSmallStep: SmallStepType = {
       keyword,
       smallStep,
@@ -33,78 +33,72 @@ const useSmallSteps = () => {
 
     setSteps((prev) => [...prev, newSmallStep]);
     smallStepHelper.addSmallStep(newSmallStep);
-  }, []);
+  };
 
-  const removeSmallStep = useCallback(
-    (keyword: string, smallStep: string) => {
-      const removedSteps = steps.filter(
-        (step) => step.keyword !== keyword && step.smallStep !== smallStep
+  const removeSmallStep = (keyword: string, smallStep: string) => {
+    const removedSteps = produce(steps, (draft) => {
+      const removeStepIdx = draft.findIndex(
+        (step) => step.keyword === keyword && step.smallStep === smallStep
       );
 
-      setSteps(removedSteps);
-      smallStepHelper.setSmallSteps = removedSteps;
-    },
-    [steps]
-  );
+      if (removeStepIdx === -1) throw Error(`Cannot found a small step`);
 
-  const toggleCheckbox = useCallback(
-    (args: ToggleArgs) => {
-      const { keyword, smallStep, checked, localDate } = args;
-      const newSteps = produce(steps, (state) => {
-        const smallStepIdx = state.findIndex(
-          (step) => step.keyword === keyword && step.smallStep === smallStep
-        );
+      draft.splice(removeStepIdx, 1);
+    });
 
-        if (smallStepIdx === -1) throw Error(`Cannot found a small step`);
+    setSteps(removedSteps);
+    smallStepHelper.setSmallSteps = removedSteps;
+  };
 
-        const checkedList = state[smallStepIdx].checkedList;
+  const toggleCheckbox = (args: ToggleArgs) => {
+    const { keyword, smallStep, checked, localDate } = args;
+    const newSteps = produce(steps, (state) => {
+      const smallStepIdx = state.findIndex(
+        (step) => step.keyword === keyword && step.smallStep === smallStep
+      );
 
-        if (checked) {
-          checkedList.push(localDate);
-        } else {
-          const dateIdx = checkedList.findIndex((_) => _ === localDate);
+      if (smallStepIdx === -1) throw Error(`Cannot found a small step`);
 
-          if (dateIdx === -1) throw Error(`Cannot found a date`);
+      const checkedList = state[smallStepIdx].checkedList;
 
-          checkedList.splice(dateIdx, 1);
-        }
+      if (checked) {
+        checkedList.push(localDate);
+      } else {
+        const dateIdx = checkedList.findIndex((_) => _ === localDate);
+
+        if (dateIdx === -1) throw Error(`Cannot found a date`);
+
+        checkedList.splice(dateIdx, 1);
+      }
+    });
+
+    setSteps(newSteps);
+    smallStepHelper.setSmallSteps = newSteps;
+  };
+
+  const addSmallStepDate = (newDate: SmallStepDatesType) => {
+    const addedDates = produce(dates, (draft) => {
+      draft.push(newDate);
+    });
+
+    setDates(addedDates);
+    smallStepDatesHelper.setSmallStepDates = addedDates;
+  };
+
+  const removeSmallStepDate = (removeDates: string[]) => {
+    const removedDates = produce(dates, (draft) => {
+      removeDates.forEach((date) => {
+        const idx = draft.findIndex(({ date: _date }) => _date === date);
+
+        if (idx === -1) throw Error("Cannot found a date");
+
+        draft.splice(idx, 1);
       });
+    });
 
-      setSteps(newSteps);
-      smallStepHelper.setSmallSteps = newSteps;
-    },
-    [steps]
-  );
-
-  const addSmallStepDate = useCallback(
-    (newDate: SmallStepDatesType) => {
-      const addedDates = produce(dates, (draft) => {
-        draft.push(newDate);
-      });
-
-      setDates(addedDates);
-      smallStepDatesHelper.setSmallStepDates = addedDates;
-    },
-    [dates]
-  );
-
-  const removeSmallStepDate = useCallback(
-    (removeDates: string[]) => {
-      const removedDates = produce(dates, (draft) => {
-        removeDates.forEach((date) => {
-          const idx = draft.findIndex(({ date: _date }) => _date === date);
-
-          if (idx === -1) throw Error("Cannot found a date");
-
-          draft.splice(idx, 1);
-        });
-      });
-
-      setDates(removedDates);
-      smallStepDatesHelper.setSmallStepDates = removedDates;
-    },
-    [dates]
-  );
+    setDates(removedDates);
+    smallStepDatesHelper.setSmallStepDates = removedDates;
+  };
 
   const saveDatesInStorage = useCallback(() => {
     if (!date) return;
