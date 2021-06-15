@@ -1,46 +1,105 @@
-# Getting Started with Create React App
+# Small Step Monthly Planner
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+하루하루 작은 실천으로 큰 변화를 이루는 스몰 스텝
 
-## Available Scripts
+스몰 스텝 플래너로 변화하는 자신을 발견해보는 건 좋은 경험일 거예요.
 
-In the project directory, you can run:
+## 스크린샷
 
-### `yarn start`
+<details open>
+  <summary>
+    월 별 날짜 관리
+  </summary>
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+  <div>
+    <p>스몰 스텝은 월 단위로 하는 일을 실천하고 표시해요.</p>
+    <p>단순하게 날짜를 확인하고 개수만 확인할 수 있게 했어요.</p>
+    <p>그렇다고 개수에 관심을 가지면 안 돼요. 실천한다는 마음가짐을 중요하게 생각해요.</p>
+  </div>
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+  <img src="./docs/images/SmallStep-Manage.png" alt="월 별 날짜 관리" />
 
-### `yarn test`
+</details>
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+<br />
 
-### `yarn build`
+<details open>
+  <summary>
+    날짜 추가
+  </summary>
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+  <div>
+    <p>날짜 추가하기 버튼을 누르면 날짜를 추가할 수 있는 입력 칸이 나와요.</p>
+    <p>형식(yyyy-mm | 2021-06)을 잘 지켜서 입력해야 추가할 수 있어요.</p>
+  </div>
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+  <img src="./docs/images/SmallStep-Manage-AddDate.png" alt="날짜 추가" />
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+</details>
 
-### `yarn eject`
+<br />
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+<details open>
+  <summary>
+    플래너 페이지
+  </summary>
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+  <div>
+    <p>스몰 스텝을 실천하고 기록하는 공간이에요.</p>
+    <p>날짜를 추가했으면 해당 칸을 클릭해 플래너 페이지에 접속할 수 있어요.</p>
+    <p>하루하루 실천할 수 있는 스몰 스텝을 추가하고 기록해요.</p>
+    <p>절대 못 했다고 해서 강박하게 생각하기보단 물 흐르듯 자연스럽게 실천할 수 있으면 더 좋아요.</p>
+    <p>그렇다고 당연한 것만 적으면 그건 실천이 아니겠죠? 더 나은 내일의 나를 위해 성장할 수 있는 스몰 스텝을 추가하면 좋아요.</p>
+    <p>비록 실천하려고 해도 항상 할 순 없는 노릇이죠. 일주일 동안 실천하지 못한 스몰 스텝은 과감하게 버려야 해요. 실천할 수 없는 스몰 스텝이라고 인정하는 것도 하나의 성장이기 때문이에요.</p>
+  </div>
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+  <img src="./docs/images/SmallStep-Planner.png" alt="플래너 페이지" />
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+</details>
 
-## Learn More
+<br />
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+<details open>
+  <summary>
+    스몰 스텝 추가
+  </summary>
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+  <div>
+    <p>스몰 스텝을 추가하는 영역이에요.</p>
+    <p>큰 행복이 아니라 작은 행복부터 찾을 수 있도록 스몰 스텝을 추가해봐요.</p>
+  </div>
+
+  <img src="./docs/images/SmallStep-Planner-AddSmallStep.png" alt="스몰 스텝 추가" />
+
+</details>
+
+<blockquote>
+
+  <p>작지만 꾸준한 실천을 통해 일상의 <strong>주인으로 살게 해주는 작은 혁명</strong>을 이루고 싶은신가요?</p>
+  <p>큰 행복이 아니라 <strong>작지만 확실한 행복</strong> 부터 찾아봐요.</p>
+  <p>억지로 무엇을 하라고 강요하지 않아요. 대신 <strong>마음이 끌리는 아주 작은 시도</strong>를 해보는건 어떨까요?</p>
+
+</blockquote>
+
+```
+📦 Small-Step-Planner
+├─ .gitignore
+├─ README.md
+├─ package.json
+├─ public
+├─ src
+│  ├─ App.tsx
+│  ├─ components
+│  ├─ index.tsx
+│  ├─ pages
+│  ├─ reset.css
+│  └─ utils
+│     ├─ constants
+│     ├─ functions
+│     ├─ hooks
+│     └─ libs
+├─ tsconfig.json
+└─ yarn.lock
+```
+
+©generated by [Project Tree Generator](https://woochanleee.github.io/project-tree-generator)
