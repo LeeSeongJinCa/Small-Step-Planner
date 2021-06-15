@@ -73,6 +73,8 @@
 
 </details>
 
+<br />
+
 <blockquote>
 
   <p>작지만 꾸준한 실천을 통해 일상의 <strong>주인으로 살게 해주는 작은 혁명</strong>을 이루고 싶은신가요?</p>
@@ -80,6 +82,8 @@
   <p>억지로 무엇을 하라고 강요하지 않아요. 대신 <strong>마음이 끌리는 아주 작은 시도</strong>를 해보는건 어떨까요?</p>
 
 </blockquote>
+
+<br />
 
 ```
 📦 Small-Step-Planner
