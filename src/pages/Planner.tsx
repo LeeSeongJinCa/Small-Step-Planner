@@ -43,7 +43,7 @@ const PlannerPage = () => {
 
 export const Wrap = styled.main`
   width: 1460px;
-  margin: 80px auto;
+  margin: 40px auto;
   padding: 0 40px;
   color: #192029;
   @media screen and (max-width: 1460px) {
