@@ -1,4 +1,3 @@
-import { useEffect, useRef } from "react";
 import styled from "@emotion/styled";
 
 import AddDateInput from "./AddDateInput";
@@ -12,14 +11,7 @@ type Props = {
 };
 
 const AddDate = ({ dates }: Props) => {
-  const inputRef = useRef<HTMLInputElement>(null);
   const [toggleDate, onClickToggleDate] = useToggle(false);
-
-  useEffect(() => {
-    if (toggleDate && inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [toggleDate]);
 
   return (
     <AddDateWrap>
