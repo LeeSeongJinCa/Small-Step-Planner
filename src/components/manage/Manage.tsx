@@ -52,10 +52,9 @@ export const Manage = () => {
 };
 
 const ManageWrap = styled.main`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  max-width: 500px;
+  margin: 80px auto;
+  padding: 0 24px;
   > ul {
     height: 600px;
     border: 1px solid #d2d2d2;
@@ -80,7 +79,7 @@ const ManageWrap = styled.main`
       z-index: 1;
       font-weight: bold;
       span {
-        width: 200px;
+        width: 50%;
         text-align: center;
         > svg {
           margin-right: 4px;

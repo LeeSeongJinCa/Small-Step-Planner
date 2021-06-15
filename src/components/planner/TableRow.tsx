@@ -60,25 +60,25 @@ export const TableItem = styled.li`
   display: flex;
   justify-content: center;
   flex: 1 1 0;
-  cursor: move;
+  cursor: grab;
   &.head {
-    background-color: #999999;
+    background-color: #3080f5;
+    color: white;
   }
   .item {
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 8px 4px;
-    border: 1px solid black;
+    border-bottom: 1px solid #d3d3d3;
     text-align: center;
-    &.keyword {
-      min-width: 90px;
-    }
+    &.keyword,
     &.small-step {
-      min-width: 90px;
+      width: 90px;
       word-break: keep-all;
     }
     &.date {
+      flex: 1;
       min-width: 40px;
     }
     input[type="checkbox"] {
@@ -87,11 +87,50 @@ export const TableItem = styled.li`
       cursor: pointer;
     }
   }
+  &[data-grab="grab"] {
+    cursor: grabbing;
+  }
+  &:not(:first-of-type) .item.keyword,
+  .small-step {
+    text-align: left;
+    justify-content: flex-start;
+    font-size: 14px;
+  }
+  @media screen and (max-width: 1460px) {
+    .item {
+      &.keyword,
+      &.small-step {
+        width: 60px;
+        font-size: 14px;
+      }
+      &.date {
+        flex: 1;
+        min-width: auto;
+      }
+      input[type="checkbox"] {
+        width: 14px;
+        height: 14px;
+      }
+    }
+  }
+  @media screen and (max-width: 1240px) {
+    &:not(:first-of-type) .item.keyword,
+    .item.small-step {
+      font-size: 12px;
+    }
+    .item.keyword {
+      display: none;
+    }
+    .item.small-step {
+      width: 60px;
+      font-size: 12px;
+    }
+  }
 `;
 
 const TableRowWrap = styled(TableItem)`
   &:nth-of-type(2n) {
-    background-color: #eeeeee;
+    background-color: #f7fafd;
   }
   &:hover svg {
     opacity: 1;
@@ -137,11 +176,5 @@ const TableRowWrap = styled(TableItem)`
     height: 50%;
     color: #9a9a9a;
     transition: opacity 300ms;
-  }
-  &:not(:first-of-type) > .item.keyword,
-  .small-step {
-    text-align: left;
-    justify-content: flex-start;
-    font-size: 14px;
   }
 `;

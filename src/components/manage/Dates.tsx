@@ -54,10 +54,7 @@ const Dates = ({ dates, removeDates, toggleToRemoveDates }: Props) => {
         };
 
         return (
-          <DateItem
-            key={date}
-            className={`flex-center ${count === i ? "focused" : ""}`}
-          >
+          <DateItem key={date} className={count === i ? "focused" : ""}>
             <AiFillDelete
               className={`${removeDates.includes(date) ? "remove" : ""}`}
               onClick={onClickDelete}
@@ -103,12 +100,12 @@ const DateItem = styled.li`
     }
   }
   > a {
-    display: inline-block;
+    display: block;
     color: black;
     padding: 12px;
     > span {
       display: inline-block;
-      width: 200px;
+      width: 50%;
       text-align: center;
     }
   }

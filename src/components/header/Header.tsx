@@ -20,7 +20,7 @@ const HeaderWrap = styled.header`
   top: 0;
   width: 100%;
   height: 48px;
-  background-color: #182b4d;
+  background-color: #0064ff;
   color: #fff;
   user-select: none;
   z-index: 8;

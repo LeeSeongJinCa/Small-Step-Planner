@@ -1,7 +1,7 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import styled from "@emotion/styled";
 
-import { BiAddToQueue } from "../assets";
+import { BiAddToQueue, GiCancel } from "../assets";
 import { useToggle, useInput, useSmallSteps } from "../../utils/hooks";
 
 const AddSmallStep = () => {
@@ -32,6 +32,12 @@ const AddSmallStep = () => {
     onToggle();
   };
 
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [toggle]);
+
   return (
     <AddSmallStepWrap>
       <SlideWrap toggle={toggle}>
@@ -57,6 +63,12 @@ const AddSmallStep = () => {
         <BiAddToQueue title="add small step" />
         <span>{toggle ? "완료" : "추가"}</span>
       </Button>
+      {toggle && (
+        <Button className="flex-center" onClick={onToggle}>
+          <GiCancel />
+          <span>취소</span>
+        </Button>
+      )}
     </AddSmallStepWrap>
   );
 };
@@ -68,17 +80,15 @@ const AddSmallStepWrap = styled.li`
 `;
 
 const SlideWrap = styled.div<{ toggle: boolean }>`
-  position: relative;
-  top: 0;
-  left: 0;
   display: flex;
-  width: ${({ toggle }) => (toggle ? "300px" : "0")};
+  width: ${({ toggle }) => (toggle ? "320px" : "0")};
   transform: scale(${({ toggle }) => (toggle ? "1" : "0")});
   transition: all 500ms;
 `;
 
 const Input = styled.input`
   width: 150px;
+  margin: 0 4px;
   padding: 8px;
   border: 1px solid #bdbdbd;
   outline: none;
@@ -97,6 +107,7 @@ const Input = styled.input`
 const Button = styled.button`
   position: relative;
   height: 100%;
+  margin: 0 4px;
   padding: 8px;
   border: 0;
   border-radius: 4px;
@@ -114,6 +125,9 @@ const Button = styled.button`
   }
   &:focus {
     background-color: #0275ff;
+  }
+  > svg {
+    margin-right: 4px;
   }
 `;
 
