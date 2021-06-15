@@ -1,4 +1,4 @@
-# Small Step Monthly Planner
+# 🚲 Small Step Monthly Planner
 
 하루하루 작은 실천으로 큰 변화를 이루는 스몰 스텝
 
