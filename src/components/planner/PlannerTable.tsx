@@ -69,7 +69,7 @@ export const PlannerTable = ({ isIncludeWeekend }: Props) => {
         <TableRow.Keyword>Keyword</TableRow.Keyword>
         <TableRow.SmallStep>Small Step</TableRow.SmallStep>
         {Array.from(Array(getLastDate()).keys()).map((i) => {
-          const isWeekend = new Date(`${date}-${i + 1}`).getDay() % 6 == 0;
+          const isWeekend = new Date(`${date}-${i + 1}`).getDay() % 6 === 0;
 
           if (isIncludeWeekend && isWeekend) return null;
 

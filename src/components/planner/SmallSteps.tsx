@@ -56,7 +56,7 @@ const SmallSteps = ({
       <TableRow.Keyword>{keyword}</TableRow.Keyword>
       <TableRow.SmallStep>{smallStep}</TableRow.SmallStep>
       {Array.from(Array(getLastDate()).keys()).map((i) => {
-        const isWeekend = new Date(`${date}-${i + 1}`).getDay() % 6 == 0;
+        const isWeekend = new Date(`${date}-${i + 1}`).getDay() % 6 === 0;
 
         if (isIncludeWeekend && isWeekend) return null;
 
