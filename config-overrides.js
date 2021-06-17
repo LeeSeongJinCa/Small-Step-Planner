@@ -1,8 +1,9 @@
-const path = require("path");
-
 module.exports = {
-  paths: function (paths, env) {
-    paths.publicPath = path.resolve(__dirname, "/Small-Step-Planner/");
-    return paths;
+  devServer: function (configFunction) {
+    return function (proxy, allowedHost) {
+      const config = configFunction(proxy, allowedHost);
+      config.publicPath = "/Small-Step-Planer/";
+      return config;
+    };
   },
 };
