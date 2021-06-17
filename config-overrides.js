@@ -1,6 +1,9 @@
 module.exports = {
   webpack: function (config, env) {
-    config.publicPath = "/Small-Step-Planner";
+    if (env === "production") {
+      config.output.publicPath = "/Small-Step-Planner/";
+    }
+
     return config;
   },
 };
